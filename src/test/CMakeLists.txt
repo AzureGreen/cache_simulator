@@ -1,6 +1,7 @@
 # test for lib
-add_executable(fileio_test fileio_test.cc )
-add_executable(util_test util_test.cc )
+add_executable(fileio_test fileio_test.cc)
+add_executable(util_test util_test.cc)
+add_executable(file_lock_test file_lock_test.cc)
 add_executable(thread_pool_test thread_pool_test.cc )
 
 target_link_libraries(fileio_test file_io)

@@ -33,6 +33,10 @@ class FileMgr : public Singleton<FileMgr> {
     return PathJoin(base_dir_, ip_, dt_, bucket_id_, "logs");
   }
 
+  std::string LogDir() const {
+    return PathJoin(base_dir_, ip_, dt_, "logs", "cache");
+  }
+
   std::string PrevCheckpoint() const {
     auto prev_dt = PreviousDT();
     std::string file_name = algor_name_ + "_" + size_ + "GB.gz";

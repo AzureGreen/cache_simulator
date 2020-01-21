@@ -47,6 +47,7 @@ class CacheTester {
         return;
       }
       instance_.LoadCheckpoint(reader);
+      LOG(INFO) << "Succ to load ckp: " << ckp;
     }
   }
 
@@ -54,6 +55,7 @@ class CacheTester {
     // check directory exist or not;
     std::string dir_path = FileDirectory(ckp);
     if (!PathExist(dir_path)) {
+      // here is safe, no need for file lock
       MakeDir(dir_path);
     }
     FileWriter writer;
@@ -63,6 +65,7 @@ class CacheTester {
       return;
     }
     instance_.SaveCheckpoint(writer);
+    LOG(INFO) << "Succ to dump ckp: " << ckp;
   }
 
   /// start to simulating, firstly load checkpoint if necessary,

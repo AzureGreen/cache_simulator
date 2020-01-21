@@ -9,6 +9,7 @@
 #include "include/defs.h"
 #include "include/filemgr.h"
 #include "util/util.h"
+#include "util/mutex/file_lock.h"
 
 //struct Performace {
 //  size_t hit_bytes;
@@ -33,18 +34,17 @@ extern "C" {
 
     FLAGS_task_id = JoinString(ip, "_", dt, "_", bucket_id, "_", algor_name, "_", size, "GB");
 
-//    std::stringstream ss;
-//    ss << ip << "_" << dt << "_" << bucket_id << "_" << algor_name << "_" << size << "GB";
-//    FLAGS_task_id = ss.str();
-//    FLAGS_task_id = std::string(ip) + "_" + std::string(dt) + "_" +
-//        std::to_string(bucket_id) + "_" + algor_name + "_" + size + "GB";
-
     // do some initialization work
-    google::InitGoogleLogging(FLAGS_task_id.data());
-    FLAGS_log_dir = "/data/cache_simulator/logs/cache";
-    LOG(INFO) << "start to simulate " << FLAGS_task_id;
-
     FileMgr::Instance().Initialize(ip, dt, bucket_id, algor_name, size);
+
+    google::InitGoogleLogging(FLAGS_task_id.data());
+    FLAGS_log_dir = FileMgr::Instance().LogDir();
+    if (!PathExist(FLAGS_log_dir)) {
+      // here be careful about process lock
+      FileLock fl;
+      MakeDir(FLAGS_log_dir);
+    }
+    LOG(INFO) << "start to simulate " << FLAGS_task_id;
 
     // trace files
     std::string trace_dir = FileMgr::Instance().TraceDir();
@@ -60,8 +60,8 @@ extern "C" {
     tester.Simulate(trace_files, prev_ckf, cur_ckf, p->hit_bytes,
         p->request_bytes);
 
-    LOG(INFO) << "Finish simulation " << FLAGS_task_id << " hit bytes: " << p->hit_bytes
-        << " request bytes: " << p->request_bytes;
+    LOG(INFO) << "Finish simulation " << FLAGS_task_id;
+    LOG(INFO) << " hit bytes: " << p->hit_bytes << " request bytes: " << p->request_bytes;
 
     google::ShutdownGoogleLogging();
   }
