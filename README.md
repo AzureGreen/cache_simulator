@@ -21,7 +21,7 @@ Third party libraries: Boost-static, (gflags, glog if not build `libreplace.so`,
 Generate makefile:
 
 ```shell
-mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release ..
+cd src && mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release ..
 ```
 
 Build:
