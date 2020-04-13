@@ -18,27 +18,15 @@
 template <typename T>
 class FIFOCache : public Cache<T> {
  public:
-  struct FIFONode {
-    T      key;
-    size_t size;
-    explicit FIFONode(T _key, size_t _size) : key(_key), size(_size) {}
-  };
 
-  using FIFONodeIter = typename std::list<FIFONode>::iterator;
-
-  FIFOCache(size_t capacity) : Cache<T>(FIFO, capacity) {}
+  explicit FIFOCache(size_t capacity) : Cache<T>(FIFO, capacity) {}
 
   ~FIFOCache() {
     cache_map_.clear();
     fifo_.clear();
   }
 
-  inline std::list<struct FIFONode> & fifo() { return fifo_; }
-
-  inline std::unordered_map<T, typename std::list<struct FIFONode>::iterator>
-      & cache_map() { return cache_map_; }
-
-  virtual bool get(T key, size_t &size) {
+  bool get(T key, size_t &size) {
     auto it = cache_map_.find(key);
     if (it != cache_map_.end()){
       size = it->second->size;
@@ -47,9 +35,9 @@ class FIFOCache : public Cache<T> {
     return false;
   }
 
-  virtual bool insert(T key, size_t size) {
+  bool insert(T key, size_t size) {
     size_t chunk_size = this->ChunkSize(size);
-    while (this->Full(chunk_size)) {
+    while (this->IsFull(chunk_size)) {
       evict();
     }
     fifo_.emplace_front(key, size);
@@ -58,8 +46,20 @@ class FIFOCache : public Cache<T> {
     return true;
   }
 
- private:
+ protected:
+   struct FIFONode {
+    T      key;
+    size_t size;
+    explicit FIFONode(T _key, size_t _size) : key(_key), size(_size) {}
+  };
+  
+  using FIFONodeIter = typename std::list<FIFONode>::iterator;
 
+  std::list<struct FIFONode> & fifo() { return fifo_; }
+
+  std::unordered_map<T, FIFONodeIter> & cache_map() { return cache_map_; }
+
+ private:
   void evict() {
     FIFONodeIter node = std::prev(fifo_.end());
     this->DecreaseSize(this->ChunkSize(node->size));

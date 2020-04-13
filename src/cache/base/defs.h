@@ -20,7 +20,7 @@ typedef enum {
   SLRU,
   S3LRU,
   S4LRU,
-  /* S2LRU, */
+  S2LRU,
   LIRS,
   OPT,
   FIFO,

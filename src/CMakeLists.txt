@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.9)
 
 project(cdn_cache_analysis)
 
-# add_compile_options(-Wl,--no-as-needed)
+add_compile_options(-Wl,--no-as-needed)
 # set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-std=c++11 -pthread")
 set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-std=c++11 -fPIC")
 
@@ -15,4 +15,5 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -o2 -Wall")
 include_directories(.)
 add_subdirectory(util)
 add_subdirectory(simulate)
+add_subdirectory(statistic)
 add_subdirectory(test)

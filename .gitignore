@@ -32,9 +32,9 @@
 *.app
 
 # others
-src/.idea
-src/bin
-src/build
-src/cmake-build-debug
-src/cmake-build-debug-mingw
-src/cmake-build-debug-remote-host
+.idea
+bin
+build
+cmake-build-debug
+cmake-build-debug-mingw
+cmake-build-debug-remote-host

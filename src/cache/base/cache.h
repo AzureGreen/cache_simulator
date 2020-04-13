@@ -21,23 +21,23 @@ class Cache {
 
   virtual ~Cache() {}
 
-  virtual inline algorithm_t name() const { return name_; }
+  virtual algorithm_t name() const { return name_; }
 
-  virtual inline size_t capacity() const { return cache_capacity_; }
+  virtual size_t capacity() const { return cache_capacity_; }
 
-  virtual inline size_t size() const { return cache_size_; }
+  virtual size_t size() const { return cache_size_; }
 
-  virtual inline bool Empty() const { return cache_size_ == 0; }
+  virtual bool Empty() const { return cache_size_ == 0; }
 
-  virtual inline bool Full(size_t chunk_size) const { return cache_size_ + chunk_size >= cache_capacity_; }
+  virtual bool IsFull(size_t chunk_size) const { return cache_size_ + chunk_size > cache_capacity_; }
 
-//  virtual inline size_t chunksize(size_t size) const { return ChunkSize(size); }
+//  virtual size_t chunksize(size_t size) const { return ChunkSize(size); }
 
-  virtual inline void IncreaseSize(size_t size) { cache_size_ += size; }
+  virtual void IncreaseSize(size_t size) { cache_size_ += size; }
 
-  virtual inline void DecreaseSize(size_t size) { cache_size_ -= size; }
+  virtual void DecreaseSize(size_t size) { cache_size_ -= size; }
 
-  virtual inline size_t ChunkSize(size_t size) {
+  virtual size_t ChunkSize(size_t size) {
     return size == constant::BIG_CHUNK_SIZE ? constant::BIG_CHUNK_SIZE :
            constant::TINY_CHUNK_SIZE;
   }

@@ -20,13 +20,6 @@
 
 #include "util/util.h"
 
-FileWriter::~FileWriter() {
-  // here, can't close by myself...
-/*   if (file_->is_open()) { */
-    // file_->close();
-/*   } */
-}
-  
 bool FileWriter::OpenFile(const std::string &filepath) {
   file_ = std::unique_ptr<std::ofstream>(new std::ofstream(filepath, std::ios_base::out | std::ios_base::binary));
   if (!file_->is_open()) {
@@ -87,3 +80,7 @@ FileWriter &FileWriter::operator<< (int word) {
   return *this;
 }
 
+FileWriter &FileWriter::operator<< (double word) {
+  *os_ << word;
+  return *this;
+}

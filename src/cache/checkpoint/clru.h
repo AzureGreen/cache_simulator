@@ -10,6 +10,7 @@
 #define CHECKPOINT_LRU_H
 
 #include "cache/base/lru.h"
+#include <string>
 #include "util/util.h"
 
 template <typename T>
@@ -25,10 +26,10 @@ class LRUCheckPoint : public LRUCache<T> {
   /// \return bool
   bool Push(const std::string &line) {
     auto ret = Split(line, '\t');
-    T key = T(std::stoull(ret[0]));
+    T key = static_cast<T>(std::stoull(ret[0]));
     size_t size = std::stoull(ret[1]);
     size_t chunk_size = this->ChunkSize(size);
-    if (this->Full(chunk_size)) return false;
+    if (this->IsFull(chunk_size)) return false;
     this->lru().emplace_back(key, size);
     this->cache_map()[key] = std::prev(this->lru().end());
     this->IncreaseSize(chunk_size);

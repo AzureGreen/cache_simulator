@@ -30,9 +30,9 @@ struct CacheMetrics {
   size_t ho = 0;   // hit objects
   size_t so = 0;   // sum of objects
   size_t wo = 0;   // write objects
-  long double hb = 0.0l; // hit bytes
+  size_t hb = 0; // hit bytes
   // long double wb = 0.0; // write bytes
-  long double sb = 0.0l;  // sum of bytes
+  size_t sb = 0;  // sum of bytes
 };
 
 template <typename K>

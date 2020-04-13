@@ -22,9 +22,9 @@
 class FileReader {
 
  public:
-  FileReader() {}
+  FileReader() = default
 
-  virtual ~FileReader();
+  virtual ~FileReader() = default;
 
   std::string line() const { return line_; }
   
@@ -44,13 +44,15 @@ class FileReader {
 
   size_t FileLength();
 
-  operator bool();
+  explicit operator bool();
 
   FileReader &operator>> (std::string &word);
 
   FileReader &operator>> (char *word);
 
   FileReader &operator>> (size_t &word);
+
+  FileReader &operator>> (double &word);
 
  private:
 

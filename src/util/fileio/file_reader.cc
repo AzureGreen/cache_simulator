@@ -19,19 +19,6 @@
 
 #include "util/util.h"
 
-FileReader::~FileReader() {
-  // pop inbuf
-/*   while (!inbuf_->empty()) { */
-    // inbuf_->pop();
-  // }
-
-  // if (file_->is_open()) {
-    // file_->close();
-  // }
-
-}
-
-
 FileReader::operator bool() {
   return !is_->eof();
 }
@@ -88,6 +75,11 @@ FileReader &FileReader::operator>> (char *word) {
 }
 
 FileReader &FileReader::operator>> (size_t &word) {
+  *is_ >> word;
+  return *this;
+}
+
+FileReader &FileReader::operator>> (double &word) {
   *is_ >> word;
   return *this;
 }

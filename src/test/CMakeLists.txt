@@ -11,4 +11,7 @@ target_link_libraries(thread_pool_test thread_pool)
 # another test
 add_executable(replace_test replace_test.cc)
 target_link_libraries(replace_test replace)
+# another test
+add_executable(max_bhr_test max_bhr_test.cc)
+target_link_libraries(max_bhr_test max_bhr_static)
 

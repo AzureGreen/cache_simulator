@@ -16,15 +16,15 @@ namespace constant {
   
   const size_t OUT_OF_TRACE = std::numeric_limits<size_t>::max();
 
-  constexpr size_t MAX_FILE_SIZE = 1ull << 40;
+  constexpr size_t MAX_FILE_SIZE = 1ull << 40ul;
 
-  static constexpr size_t KILOBYTE = 1ull << 10;
+  static constexpr size_t KILOBYTE = 1ull << 10u;
 
-  static constexpr size_t MEGABYTE = 1ull << 20;
+  static constexpr size_t MEGABYTE = 1ull << 20ul;
 
-  static constexpr size_t GIGABYTE = 1ull << 30;
+  static constexpr size_t GIGABYTE = 1ull << 30ul;
 
-  static constexpr size_t TIBIBYTE = 1ull << 30;
+  static constexpr size_t TIBIBYTE = 1ull << 40ul;
 
   static const double Q_SIZE_RATIO = 0.3;
 
@@ -37,6 +37,7 @@ namespace constant {
 
   static constexpr size_t BIG_CHUNK_SIZE = MEGABYTE;
 
+  static const size_t DISK_NUM = 3;
   // static constexpr size_t BIG_DATA_SIZE = 4 * MEBIBYTE;
 };
 

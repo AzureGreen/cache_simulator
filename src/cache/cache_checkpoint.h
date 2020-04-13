@@ -17,8 +17,12 @@
 #include "cache/base/cache.h"
 #include "cache/checkpoint/clru.h"
 #include "cache/checkpoint/cfifo.h"
+#include "cache/checkpoint/cslru.h"
+#include "cache/checkpoint/cfifo2.h"
 #include "util/fileio/file_reader.h"
 #include "util/fileio/file_writer.h"
+
+// static size_t cnt = 0;
 
 template <typename T>
 class CacheCheckpoint {
@@ -34,13 +38,15 @@ class CacheCheckpoint {
     cache.cache_ = nullptr;
   }
 
-  virtual ~CacheCheckpoint() {}
+  virtual ~CacheCheckpoint() {
+    // std::cout << cnt << std::endl;
+  }
 
   // daily
 
-  inline long double FluxOut() const { return cm_.sb; }
+  inline size_t FluxOut() const { return cm_.sb; }
 
-  inline long double FluxHit() const { return cm_.hb; }
+  inline size_t FluxHit() const { return cm_.hb; }
 
   inline size_t RequestNum() const { return cm_.so; }
 
@@ -53,6 +59,7 @@ class CacheCheckpoint {
   Cache<T> operator*() const { return *cache_; }
 
   bool Get(T key, size_t size) {
+    // cnt += size;
     bool ret = cache_->get(key, size);
     if (ret) {
       cm_.ho ++;
@@ -72,22 +79,22 @@ class CacheCheckpoint {
 
   // this is for opt
   // opt need nextpos
-  bool Get(T key, size_t size, size_t nextpos) {
-    bool ret = cache_->get(key, size, nextpos);
-    if (ret) {
-      cm_.ho ++;
-      cm_.hb += size;
-    }
-    // maybe overflow 64bit
-    cm_.so ++;
-    cm_.sb += size;
-    return ret;
-  }
+/*   bool Get(T key, size_t size, size_t nextpos) { */
+    // bool ret = cache_->get(key, size, nextpos);
+    // if (ret) {
+      // cm_.ho ++;
+      // cm_.hb += size;
+    // }
+    // // maybe overflow 64bit
+    // cm_.so ++;
+    // cm_.sb += size;
+    // return ret;
+  // }
 
-  bool Insert(T key, size_t size, size_t nextpos) {
-    cm_.wo ++;
-    return cache_->insert(key, size, nextpos);
-  }
+/*   bool Insert(T key, size_t size, size_t nextpos) { */
+    // cm_.wo ++;
+    // return cache_->insert(key, size, nextpos);
+  // }
 
   void LoadCheckpoint(FileReader &reader) {
     while (!reader.eof()) {
@@ -98,11 +105,16 @@ class CacheCheckpoint {
   }
 
   void SaveCheckpoint(FileWriter &writer) {
-    std::string line = cache_->Pop();
-    do {
-      writer.WriteLine(line);
+/*     std::string line = cache_->Pop(); */
+    // do {
+      // writer.WriteLine(line);
+      // line = cache_->Pop();
+    /* } while (line != ""); */
+    std::string line;
+    while (!cache_->Empty()) {
       line = cache_->Pop();
-    } while (line != "");
+      writer.WriteLine(line);
+    }
   }
 
  private:
@@ -112,6 +124,14 @@ class CacheCheckpoint {
         return new LRUCheckPoint<T>(cache_capacity);
       case FIFO:
         return new FIFOCheckPoint<T>(cache_capacity);
+      case S3LRU:
+        return new SLRUCheckPoint<T>(3, cache_capacity);
+      case S2LRU:
+        return new SLRUCheckPoint<T>(2, cache_capacity);
+      case S4LRU:
+        return new SLRUCheckPoint<T>(4, cache_capacity);
+      case FIFO2:
+        return new FIFO2CheckPoint<T>(cache_capacity);
        default:
         return nullptr;
     }

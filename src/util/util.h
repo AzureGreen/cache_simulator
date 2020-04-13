@@ -77,9 +77,8 @@ inline std::vector<std::string> GetChildFiles(const std::string &parent_dir) {
     PrintError("Open dir " + parent_dir + " failed");
   }
   while ((dirp = readdir(dp)) != nullptr) {
-    if (StartWith(dirp->d_name, "access")) {
-      files.push_back(parent_dir + "/" + dirp->d_name);
-    }
+    if (StartWith(dirp->d_name, ".")) continue;  // skip 
+    files.push_back(parent_dir + "/" + dirp->d_name);
   }
   std::sort(files.begin(), files.end());
   return files;
@@ -108,7 +107,7 @@ inline bool PathExist(const std::string &filename) {
 inline bool MakeDir(const std::string &dir_path) {
   if (PathExist(dir_path)) return true;
   auto &&split_paths = Split(dir_path, '/');
-  std::string path = "";
+  std::string path;
   for (auto &i : split_paths) {
     path += "/" + i;
     if (!PathExist(path)) {

@@ -18,13 +18,6 @@
 template <typename T>
 class LRUCache : public Cache<T> {
  public:
-  struct LRUNode {
-    T key;
-    size_t size;
-    explicit LRUNode(T _key, size_t _size) : key(_key), size(_size) {}
-  };
-
-  using LRUNodeIter = typename std::list<LRUNode>::iterator;
 
   explicit LRUCache(size_t capacity)
     : Cache<T>(LRU, capacity) {}
@@ -34,12 +27,7 @@ class LRUCache : public Cache<T> {
     cache_map_.clear();
   }
 
-  inline std::list<struct LRUNode> & lru() { return lru_; }
-
-  inline std::unordered_map<T, typename std::list<struct LRUNode>::iterator>
-    & cache_map() { return cache_map_; }
-
-  virtual bool get(T key, size_t &size) {
+  bool get(T key, size_t &size) {
     auto it = cache_map_.find(key);
     if (it != cache_map_.end()) {
       size = it->second->size;
@@ -50,9 +38,9 @@ class LRUCache : public Cache<T> {
     return false;
   }
 
-  virtual bool insert(T key, size_t size) {
+  bool insert(T key, size_t size) {
     size_t chunk_size = this->ChunkSize(size);
-    while (this->Full(chunk_size)) {
+    while (this->IsFull(chunk_size)) {
       evict();
     }
     // insert to mru
@@ -62,10 +50,22 @@ class LRUCache : public Cache<T> {
     return true;
   }
 
- private:
+ protected:
+  struct LRUNode {
+    T key;
+    size_t size;
+    explicit LRUNode(T _key, size_t _size) : key(_key), size(_size) {}
+  };
 
-  
-  virtual void evict() {
+  using LRUNodeIter = typename std::list<LRUNode>::iterator;
+
+  std::list<struct LRUNode> & lru() { return lru_; }
+
+  std::unordered_map<T, LRUNodeIter> & cache_map() { return cache_map_; }
+
+ private:
+ 
+  void evict() {
     LRUNodeIter node = std::prev(lru_.end());
     this->DecreaseSize(this->ChunkSize(node->size));
     cache_map_.erase(node->key);

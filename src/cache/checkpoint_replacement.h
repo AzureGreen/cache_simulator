@@ -43,11 +43,11 @@ class CacheTester {
     if (!ckp.empty()) {
       FileReader reader;
       if (!reader.OpenFile(ckp)) {
-        LOG(ERROR) << "Fail to load ckp: " << ckp;
+        // LOG(ERROR) << "Fail to load ckp: " << ckp;
         return;
       }
       instance_.LoadCheckpoint(reader);
-      LOG(INFO) << "Succ to load ckp: " << ckp;
+      // LOG(INFO) << "Succ to load ckp: " << ckp;
     }
   }
 
@@ -61,11 +61,11 @@ class CacheTester {
     FileWriter writer;
     if (!writer.OpenFile(ckp)) {
 //      PrintError("Fail to open: " + ckp);
-      LOG(ERROR) << "Fail to dump ckp: " << ckp;
+      // LOG(ERROR) << "Fail to dump ckp: " << ckp;
       return;
     }
     instance_.SaveCheckpoint(writer);
-    LOG(INFO) << "Succ to dump ckp: " << ckp;
+    // LOG(INFO) << "Succ to dump ckp: " << ckp;
   }
 
   /// start to simulating, firstly load checkpoint if necessary,
@@ -83,7 +83,7 @@ class CacheTester {
     for (auto &chunk_file: chunk_files) {
       FeatureParser parser;
       if (!parser.OpenFile(chunk_file)) {
-        LOG(ERROR) << "Fail to parse file: " << chunk_file;
+        // LOG(ERROR) << "Fail to parse file: " << chunk_file;
         PrintError("Fail to open file: " + chunk_file);
       }
       RunNormal(parser);

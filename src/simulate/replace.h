@@ -16,7 +16,7 @@ struct Performance {
 
 extern "C" {
 
-void CacheTest(const char * ip, const char * dt, int bucket_id,
+void CacheTest(size_t task_id, const char * ip, const char * dt, int bucket_id,
     const char * algor_name, size_t cache_size, Performance *p);
 
 };

@@ -23,10 +23,10 @@
 class FileWriter {
 
  public:
-  FileWriter() {}
+  FileWriter() = default
 
-  virtual ~FileWriter();
-  
+  virtual ~FileWriter() = default
+
   bool OpenFile(const std::string &filepath);
 
   virtual void WriteLine(const std::string &line);
@@ -44,6 +44,8 @@ class FileWriter {
   FileWriter &operator<< (size_t word);
 
   FileWriter &operator<< (int word);
+
+  FileWriter &operator<< (double word);
 
  private:
 
